@@ -2,7 +2,7 @@ from PyQt5.QtWidgets import (QWidget, QSlider, QLineEdit, QLabel, QPushButton, Q
                              QHBoxLayout, QVBoxLayout, QMainWindow)
 from PyQt5.QtCore import Qt, QSize
 from PyQt5 import QtWidgets, uic
-from PyQt5.QtGui import QIcon, QPixmap, QFont
+from PyQt5.QtGui import QIcon, QPixmap
 import sys
 import json
 
@@ -14,16 +14,18 @@ import adafruit_max9744
 import mpd
 
 # Initialize I2C bus.
-i2c = busio.I2C(board.SCL, board.SDA)
+#i2c = busio.I2C(board.SCL, board.SDA)
 
 # Initialize amplifier.
-amp = adafruit_max9744.MAX9744(i2c)
+#amp = adafruit_max9744.MAX9744(i2c)
 # Optionally you can specify a different addres if you override the AD1, AD2
 # pins to change the address.
 # amp = adafruit_max9744.MAX9744(i2c, address=0x49)
 
 client = mpd.MPDClient()
 client.connect("localhost", 6600)
+#amp.volume = 34  # Volume is a value from 0 to 63 where 0 is muted/off and
+# 63 is maximum volume.
 
 path = "/home/pi/radio/Radio-GUI/"
 f = open(path + "stations.json", "r")
@@ -39,68 +41,41 @@ class MainWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
-        self.volume = 34
-        amp.volume = self.volume    # Volume is a value from 0 to 63 where 0 is muted/off and
-                                    # 63 is maximum volume.
-
-        self.scroll = QScrollArea()             # Scroll Area which contains the radio stations push buttons
-        self.scroll.setStyleSheet("background-color : black;")
+        self.scroll = QScrollArea()             # Scroll Area which contains the widgets, set as the centralWidget
+        self.leftWidget = QWidget()                 # Widget that contains the rows of stations 
         self.midWidget = QWidget()
-        self.playingLayout = QVBoxLayout()
-        self.volumeLabelLabel = QLabel("Volym")
-        self.volumeLabelLabel.setAlignment(Qt.AlignHCenter)
-        self.volumeLabelLabel.setFont(QFont('Arial', 32))
-        self.volumeLabel = QLabel()
-        self.volumeLabel.setAlignment(Qt.AlignHCenter)
-        self.volumeLabel.setFont(QFont('Arial', 80))
-        self.volumeLabel.setText("{}".format(self.volume))
-        self.playingLabelLabel = QLabel("Du lyssnar på")
-        self.playingLabelLabel.setAlignment(Qt.AlignHCenter)
-        self.playingLabelLabel.setFont(QFont("Arial", 24))
-        self.playingLabel = QLabel()
-        self.playingLabel.setAlignment(Qt.AlignHCenter)
-#        self.playingLabel.setSize()
-        self.playingLayout.addWidget(self.volumeLabelLabel)
-        self.playingLayout.addWidget(self.volumeLabel)
-        self.playingLayout.addWidget(self.playingLabelLabel)
-        
-        self.playingLayout.addWidget(self.playingLabel)
-        self.midWidget.setLayout(self.playingLayout)
         self.rightWidget = QWidget()
-        self.vbox = QVBoxLayout()               # The rows in scroll area
-        self.hbox = QHBoxLayout()       
+        self.vbox = QVBoxLayout()               # The Vertical Box that contains the Horizontal Boxes of  labels and buttons
+        self.hbox = QHBoxLayout()
         self.mainWidget = QWidget()
         self.rightLayout = QVBoxLayout()
-        self.hbox.addWidget(self.scroll)
+        self.hbox.addWidget(self.leftWidget)
         self.hbox.addWidget(self.midWidget)
         self.hbox.addWidget(self.rightWidget)
-        self.hbox.setStretch(0, 4)
-        self.hbox.setStretch(1, 4)
-        self.hbox.setStretch(2, 2)
+
         i = 1
         for s in statlist["stations"]:
             self.pb = QPushButton("", self)
             self.pb.setObjectName(s["name"])
             self.pb.setFixedSize(150, 150)
             self.pb.clicked.connect(self.stationClicked)
-            self.pb.setIcon(QIcon(path + s["icon"]))
-            self.pb.setIconSize(QSize(150, 150))
-        #    self.pb.setStyleSheet("background-image : url(" + path + s["icon"] + ");")
-            if i%2 == 1:
+            self.pb.setStyleSheet("background-image : url(" + path + s["icon"] + ");")
+            if i%3 == 1:
                 self.hStations = QHBoxLayout()
             self.hStations.addWidget(self.pb)
     
-            if i%2 == 0 or i == len(statlist["stations"]):
+            if i%3 == 0 or i == len(statlist["stations"]):
                 self.vbox.addLayout(self.hStations)
 
             i += 1
 
-        self.scroll.setLayout(self.vbox)
+        self.leftWidget.setLayout(self.vbox)
 
         #Scroll Area Properties
 #        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.scroll.setWidgetResizable(True)
+        self.scroll.setWidget(self.leftWidget)
 
         self.volUpButton = QPushButton()
         self.volUpButton.setObjectName("VolUp")
@@ -148,35 +123,26 @@ class MainWindow(QMainWindow):
         print(match["url"])
         client.add(match["url"])
         client.play()
-        pixmap = QPixmap(path + match["icon"])
-        self.playingLabel.setPixmap(pixmap)
 
     def volUpClicked(self):
         btn = self.sender()
         print("pressed {}".format(btn.objectName()))
-        if self.volume < 63:
-            amp.volume_up()
-            self.volume += 1
-            self.volumeLabel.setText("{}".format(self.volume))
+        #amp.volume_up()
 
     def volDownClicked(self):
         btn = self.sender()
         print("pressed {}".format(btn.objectName()))
-        if self.volume > 0:
-            amp.volume_down()
-            self.volume -= 1
-            self.volumeLabel.setText("{}".format(self.volume))
+        #amp.volume_down()
 
     def onOffClicked(self):
         btn = self.sender()
         print("pressed {}".format(btn.objectName()))
-        client.pause()
+        #client.pause()
 
-#def main():
-if __name__ == '__main__':
+def main():
     app = QtWidgets.QApplication(sys.argv)
     main = MainWindow()
     sys.exit(app.exec_())
 
-#if __name__ == '__main__':
-#    main()
+if __name__ == '__main__':
+    main()

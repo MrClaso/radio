@@ -3,6 +3,7 @@
         {"name":"P1","url":"https://sverigesradio.se/topsy/direkt/132-hi.mp3","icon":"res/images/p1.png"},
         {"name":"P2","url":"https://sverigesradio.se/topsy/direkt/2562-hi.mp3","icon":"res/images/p2.png"},
         {"name":"P3","url":"https://sverigesradio.se/topsy/direkt/164-hi.mp3","icon":"res/images/p3.png"},
-        {"name":"P4","url":"https://sverigesradio.se/topsy/direkt/210-hi.mp3","icon":"res/images/p4.png"}
+        {"name":"P4","url":"https://sverigesradio.se/topsy/direkt/210-hi.mp3","icon":"res/images/p4.png"},
+        {"name":"P4plus","url":"https://sverigesradio.se/topsy/direkt/4951-hi.mp3","icon":"res/images/p4plus.png"}
     ]
 }
