@@ -4,6 +4,8 @@
         {"name":"P2","url":"https://sverigesradio.se/topsy/direkt/2562-hi.mp3","icon":"res/images/p2.png"},
         {"name":"P3","url":"https://sverigesradio.se/topsy/direkt/164-hi.mp3","icon":"res/images/p3.png"},
         {"name":"P4","url":"https://sverigesradio.se/topsy/direkt/210-hi.mp3","icon":"res/images/p4.png"},
-        {"name":"P4plus","url":"https://sverigesradio.se/topsy/direkt/4951-hi.mp3","icon":"res/images/p4plus.png"}
+        {"name":"P4plus","url":"https://sverigesradio.se/topsy/direkt/4951-hi.mp3","icon":"res/images/p4plus.png"},
+        {"name":"lugnafavoriter","url":"https://fm03-ice.stream.khz.se/fm03_mp3","icon":"res/images/lugnafavoriter.png"},
+        {"name":"SoulClassics","url":"https://wr08-ice.stream.khz.se/wr08_mp3","icon":"res/images/soulclassics.png"}
     ]
 }
