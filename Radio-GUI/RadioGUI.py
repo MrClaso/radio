@@ -1,7 +1,6 @@
-from PyQt6.QtWidgets import (QWidget, QSlider, QLineEdit, QLabel, QPushButton, QScrollArea,QApplication,
-                             QHBoxLayout, QVBoxLayout, QMainWindow)
+from PyQt6.QtWidgets import (QWidget, QLabel, QPushButton, QScrollArea,QApplication,
+                             QHBoxLayout, QVBoxLayout, QMainWindow, QGroupBox)
 from PyQt6.QtCore import Qt, QSize
-from PyQt6 import QtWidgets
 from PyQt6.QtGui import QIcon, QPixmap, QFont
 import sys
 import json
@@ -24,8 +23,7 @@ import time
 
 #client = mpd.MPDClient()
 #client.connect("localhost", 6600)
-
-path = "/home/pi/radio/Radio-GUI/"
+path = "/Users/clasostman/Project/radio/Radio-GUI/"
 f = open(path + "stations.json", "r")
 j = f.read()
 statlist = json.loads(j)
@@ -42,23 +40,23 @@ class MainWindow(QMainWindow):
         self.volume = 34
 #        amp.volume = self.volume    # Volume is a value from 0 to 63 where 0 is muted/off and
                                     # 63 is maximum volume.
-
+        self.groupBox = QGroupBox()
         self.scroll = QScrollArea()             # Scroll Area which contains the radio stations push buttons
         self.scroll.setStyleSheet("background-color : black;")
         self.midWidget = QWidget()
         self.playingLayout = QVBoxLayout()
         self.volumeLabelLabel = QLabel("Volym")
-        self.volumeLabelLabel.setAlignment(Qt.AlignHCenter)
+        self.volumeLabelLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.volumeLabelLabel.setFont(QFont('Arial', 32))
         self.volumeLabel = QLabel()
-        self.volumeLabel.setAlignment(Qt.AlignHCenter)
+        self.volumeLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.volumeLabel.setFont(QFont('Arial', 80))
         self.volumeLabel.setText("{}".format(self.volume))
         self.playingLabelLabel = QLabel("Du lyssnar på")
-        self.playingLabelLabel.setAlignment(Qt.AlignHCenter)
+        self.playingLabelLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.playingLabelLabel.setFont(QFont("Arial", 24))
         self.playingLabel = QLabel()
-        self.playingLabel.setAlignment(Qt.AlignHCenter)
+        self.playingLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
 #        self.playingLabel.setSize()
         self.playingLayout.addWidget(self.volumeLabelLabel)
         self.playingLayout.addWidget(self.volumeLabel)
@@ -94,30 +92,30 @@ class MainWindow(QMainWindow):
                 self.vbox.addLayout(self.hStations)
 
             i += 1
-
-        self.scroll.setLayout(self.vbox)
+        self.groupBox.setLayout(self.vbox)
+        self.scroll.setWidget(self.groupBox)
 
         #Scroll Area Properties
 #        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
-        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
+#        self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
         self.scroll.setWidgetResizable(True)
 
         self.volUpButton = QPushButton()
         self.volUpButton.setObjectName("VolUp")
         self.volUpButton.setFixedSize(150, 150)
-        self.volUpButton.setStyleSheet("background-image : url(/home/pi/radio/Radio-GUI/res/images/volUp.png);")
+        self.volUpButton.setStyleSheet("background-image : url(" + path + "res/images/volUp.png);")
         self.volUpButton.clicked.connect(self.volUpClicked)
 
         self.volDownButton = QPushButton()
         self.volDownButton.setObjectName("VolDown")
         self.volDownButton.setFixedSize(150, 150)
-        self.volDownButton.setStyleSheet("background-image : url(/home/pi/radio/Radio-GUI/res/images/volDown.png);")
+        self.volDownButton.setStyleSheet("background-image : url(" + path + "res/images/volDown.png);")
         self.volDownButton.clicked.connect(self.volDownClicked)
 
         self.onOffButton = QPushButton()
         self.onOffButton.setObjectName("Onoff")
         self.onOffButton.setFixedSize(150, 150)
-        self.onOffButton.setStyleSheet("background-image : url(/home/pi/radio/Radio-GUI/res/images/onOff.png);")
+        self.onOffButton.setStyleSheet("background-image : url(" + path + "res/images/onOff.png);")
 #        self.onOffButton.setIcon(QIcon(QPixmap("/home/pi/radio/Radio-GUI/res/images/onOff.png)")))
 #        self.onOffButton.setIconSize(QSize(150, 150));
         self.onOffButton.clicked.connect(self.onOffClicked)
@@ -174,9 +172,9 @@ class MainWindow(QMainWindow):
 
 #def main():
 if __name__ == '__main__':
-    app = QtWidgets.QApplication(sys.argv)
+    app = QApplication(sys.argv)
     main = MainWindow()
-    sys.exit(app.exec_())
+    sys.exit(app.exec())
 
 #if __name__ == '__main__':
 #    main()
