@@ -1,29 +1,29 @@
-from PyQt5.QtWidgets import (QWidget, QSlider, QLineEdit, QLabel, QPushButton, QScrollArea,QApplication,
+from PyQt6.QtWidgets import (QWidget, QSlider, QLineEdit, QLabel, QPushButton, QScrollArea,QApplication,
                              QHBoxLayout, QVBoxLayout, QMainWindow)
-from PyQt5.QtCore import Qt, QSize
-from PyQt5 import QtWidgets, uic
-from PyQt5.QtGui import QIcon, QPixmap, QFont
+from PyQt6.QtCore import Qt, QSize
+from PyQt6 import QtWidgets
+from PyQt6.QtGui import QIcon, QPixmap, QFont
 import sys
 import json
 
-import board
-import busio
+#import board
+#import busio
 import time
-import adafruit_max9744
+#import adafruit_max9744
 
-import mpd
+#import mpd
 
 # Initialize I2C bus.
-i2c = busio.I2C(board.SCL, board.SDA)
+#i2c = busio.I2C(board.SCL, board.SDA)
 
 # Initialize amplifier.
-amp = adafruit_max9744.MAX9744(i2c)
+#amp = adafruit_max9744.MAX9744(i2c)
 # Optionally you can specify a different addres if you override the AD1, AD2
 # pins to change the address.
 # amp = adafruit_max9744.MAX9744(i2c, address=0x49)
 
-client = mpd.MPDClient()
-client.connect("localhost", 6600)
+#client = mpd.MPDClient()
+#client.connect("localhost", 6600)
 
 path = "/home/pi/radio/Radio-GUI/"
 f = open(path + "stations.json", "r")
@@ -40,7 +40,7 @@ class MainWindow(QMainWindow):
 
     def initUI(self):
         self.volume = 34
-        amp.volume = self.volume    # Volume is a value from 0 to 63 where 0 is muted/off and
+#        amp.volume = self.volume    # Volume is a value from 0 to 63 where 0 is muted/off and
                                     # 63 is maximum volume.
 
         self.scroll = QScrollArea()             # Scroll Area which contains the radio stations push buttons
@@ -143,11 +143,11 @@ class MainWindow(QMainWindow):
         btn = self.sender()
         # printing pressed
         print("pressed {}".format(btn.objectName()))
-        client.clear()
+#        client.clear()
         match = next(obj for obj in statlist["stations"] if obj["name"] == btn.objectName())
         print(match["url"])
-        client.add(match["url"])
-        client.play()
+#        client.add(match["url"])
+#        client.play()
         pixmap = QPixmap(path + match["icon"])
         self.playingLabel.setPixmap(pixmap)
 
@@ -155,7 +155,7 @@ class MainWindow(QMainWindow):
         btn = self.sender()
         print("pressed {}".format(btn.objectName()))
         if self.volume < 63:
-            amp.volume_up()
+#            amp.volume_up()
             self.volume += 1
             self.volumeLabel.setText("{}".format(self.volume))
 
@@ -163,14 +163,14 @@ class MainWindow(QMainWindow):
         btn = self.sender()
         print("pressed {}".format(btn.objectName()))
         if self.volume > 0:
-            amp.volume_down()
+#            amp.volume_down()
             self.volume -= 1
             self.volumeLabel.setText("{}".format(self.volume))
 
     def onOffClicked(self):
         btn = self.sender()
         print("pressed {}".format(btn.objectName()))
-        client.pause()
+#        client.pause()
 
 #def main():
 if __name__ == '__main__':
