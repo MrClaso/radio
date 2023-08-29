@@ -4,6 +4,9 @@ from PyQt6.QtCore import Qt, QSize
 from PyQt6.QtGui import QIcon, QPixmap, QFont
 import sys
 import json
+import ssid
+from urllib import request
+import socket
 
 #import board
 #import busio
@@ -28,8 +31,6 @@ f = open(path + "stations.json", "r")
 j = f.read()
 statlist = json.loads(j)
 
-print(statlist)
-
 class MainWindow(QMainWindow):
 
     def __init__(self):
@@ -37,6 +38,40 @@ class MainWindow(QMainWindow):
         self.initUI()
 
     def initUI(self):
+#        def internet_on():
+#            for timeout in [1,5,10,15]:
+#                try:
+#                    response=urllib.urlopen('https://google.com',timeout=timeout)
+#                    return True
+#                except urllib.URLError as err: pass
+#            return False
+
+
+        def internet_on():
+#            for timeout in [1,5,10,15]:
+#                try:
+#                    request.urlopen('https://www.google.com', timeout=timeout)
+#                    return True
+#                except request.URLError as err: 
+#                    return False
+                try:
+                    host = socket.gethostbyname('www.google.com')
+                    s = socket.create_connection((host, 80), 2)
+                    return True
+                except:
+                    return False 
+
+#        internet = internet_on()
+        internet = True
+        if not internet:
+            self.internetList = ssid.SSIDWindow()
+            self.internetList.show()
+
+            return
+
+
+
+
         self.volume = 34
 #        amp.volume = self.volume    # Volume is a value from 0 to 63 where 0 is muted/off and
                                     # 63 is maximum volume.
@@ -139,19 +174,15 @@ class MainWindow(QMainWindow):
     # action method
     def stationClicked(self):
         btn = self.sender()
-        # printing pressed
-        print("pressed {}".format(btn.objectName()))
 #        client.clear()
         match = next(obj for obj in statlist["stations"] if obj["name"] == btn.objectName())
-        print(match["url"])
 #        client.add(match["url"])
 #        client.play()
         pixmap = QPixmap(path + match["icon"])
-        self.playingLabel.setPixmap(pixmap)
+        self.playingLabel.setPixmap(pixmap.scaled(150, 150))
 
     def volUpClicked(self):
         btn = self.sender()
-        print("pressed {}".format(btn.objectName()))
         if self.volume < 63:
 #            amp.volume_up()
             self.volume += 1
@@ -159,7 +190,6 @@ class MainWindow(QMainWindow):
 
     def volDownClicked(self):
         btn = self.sender()
-        print("pressed {}".format(btn.objectName()))
         if self.volume > 0:
 #            amp.volume_down()
             self.volume -= 1
@@ -167,7 +197,6 @@ class MainWindow(QMainWindow):
 
     def onOffClicked(self):
         btn = self.sender()
-        print("pressed {}".format(btn.objectName()))
 #        client.pause()
 
 #def main():
