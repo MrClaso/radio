@@ -59,7 +59,7 @@ class MainWindow(QMainWindow):
         self.playingLabelLabel.setFont(QFont("Arial", 24))
         self.playingLabel = QLabel()
         self.playingLabel.setAlignment(Qt.AlignHCenter)
-#        self.playingLabel.setSize()
+        self.playingLabel.setStyleSheet("background-color : pink;")
         self.playingLayout.addWidget(self.volumeLabelLabel)
         self.playingLayout.addWidget(self.volumeLabel)
         self.playingLayout.addWidget(self.playingLabelLabel)
@@ -100,7 +100,7 @@ class MainWindow(QMainWindow):
         #Scroll Area Properties
 #        self.scroll.setVerticalScrollBarPolicy(Qt.ScrollBarAlwaysOn)
         self.scroll.setHorizontalScrollBarPolicy(Qt.ScrollBarAlwaysOff)
-        self.scroll.setWidgetResizable(True)
+        self.scroll.setWidgetResizable(False)
 
         self.volUpButton = QPushButton()
         self.volUpButton.setObjectName("VolUp")
@@ -149,7 +149,7 @@ class MainWindow(QMainWindow):
         client.add(match["url"])
         client.play()
         pixmap = QPixmap(path + match["icon"])
-        self.playingLabel.setPixmap(pixmap)
+        self.playingLabel.setPixmap(pixmap.scaledToWidth(150))
 
     def volUpClicked(self):
         btn = self.sender()
