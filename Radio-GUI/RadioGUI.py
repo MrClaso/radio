@@ -1,32 +1,32 @@
-from PyQt6.QtWidgets import (QWidget, QLabel, QPushButton, QScrollArea,QApplication,
+from PyQt5.QtWidgets import (QWidget, QLabel, QPushButton, QScrollArea,QApplication,
                              QHBoxLayout, QVBoxLayout, QMainWindow, QGroupBox)
-from PyQt6.QtCore import Qt, QSize
-from PyQt6.QtGui import QIcon, QPixmap, QFont
+from PyQt5.QtCore import Qt, QSize
+from PyQt5.QtGui import QIcon, QPixmap, QFont
 import sys
 import json
 import ssid
 from urllib import request
 import socket
 
-#import board
-#import busio
+import board
+import busio
 import time
-#import adafruit_max9744
+import adafruit_max9744
 
-#import mpd
+import mpd
 
 # Initialize I2C bus.
-#i2c = busio.I2C(board.SCL, board.SDA)
+i2c = busio.I2C(board.SCL, board.SDA)
 
 # Initialize amplifier.
-#amp = adafruit_max9744.MAX9744(i2c)
+amp = adafruit_max9744.MAX9744(i2c)
 # Optionally you can specify a different addres if you override the AD1, AD2
 # pins to change the address.
 # amp = adafruit_max9744.MAX9744(i2c, address=0x49)
 
-#client = mpd.MPDClient()
-#client.connect("localhost", 6600)
-path = "/Users/clasostman/Project/radio/Radio-GUI/"
+client = mpd.MPDClient()
+client.connect("localhost", 6600)
+path = "/home/pi/radio/Radio-GUI/"
 f = open(path + "stations.json", "r")
 j = f.read()
 statlist = json.loads(j)
@@ -61,8 +61,8 @@ class MainWindow(QMainWindow):
                 except:
                     return False 
 
-#        internet = internet_on()
-        internet = True
+        internet = internet_on()
+ #       internet = True
         if not internet:
             self.internetList = ssid.SSIDWindow()
             self.internetList.show()
@@ -73,21 +73,25 @@ class MainWindow(QMainWindow):
 
 
         self.volume = 34
-#        amp.volume = self.volume    # Volume is a value from 0 to 63 where 0 is muted/off and
+        amp.volume = self.volume    # Volume is a value from 0 to 63 where 0 is muted/off and
                                     # 63 is maximum volume.
         self.groupBox = QGroupBox()
         self.scroll = QScrollArea()             # Scroll Area which contains the radio stations push buttons
         self.scroll.setStyleSheet("background-color : black;")
         self.midWidget = QWidget()
+        self.midWidget.setStyleSheet("background-color : darkblue;")
         self.playingLayout = QVBoxLayout()
         self.volumeLabelLabel = QLabel("Volym")
         self.volumeLabelLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.volumeLabelLabel.setFont(QFont('Arial', 32))
+        self.volumeLabelLabel.setStyleSheet("color : white;")
         self.volumeLabel = QLabel()
         self.volumeLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.volumeLabel.setFont(QFont('Arial', 80))
+        self.volumeLabel.setStyleSheet("color : white;")
         self.volumeLabel.setText("{}".format(self.volume))
         self.playingLabelLabel = QLabel("Du lyssnar på")
+        self.playingLabelLabel.setStyleSheet("color : white;")
         self.playingLabelLabel.setAlignment(Qt.AlignmentFlag.AlignHCenter)
         self.playingLabelLabel.setFont(QFont("Arial", 24))
         self.playingLabel = QLabel()
@@ -174,30 +178,29 @@ class MainWindow(QMainWindow):
     # action method
     def stationClicked(self):
         btn = self.sender()
-#        client.clear()
+        client.clear()
         match = next(obj for obj in statlist["stations"] if obj["name"] == btn.objectName())
-#        client.add(match["url"])
-#        client.play()
+        client.add(match["url"])
+        client.play()
         pixmap = QPixmap(path + match["icon"])
         self.playingLabel.setPixmap(pixmap.scaled(150, 150))
 
     def volUpClicked(self):
-        btn = self.sender()
         if self.volume < 63:
-#            amp.volume_up()
+            amp.volume_up()
             self.volume += 1
             self.volumeLabel.setText("{}".format(self.volume))
 
     def volDownClicked(self):
-        btn = self.sender()
         if self.volume > 0:
-#            amp.volume_down()
+            amp.volume_down()
             self.volume -= 1
             self.volumeLabel.setText("{}".format(self.volume))
-
+        return
+    
     def onOffClicked(self):
-        btn = self.sender()
-#        client.pause()
+        client.pause()
+        return
 
 #def main():
 if __name__ == '__main__':

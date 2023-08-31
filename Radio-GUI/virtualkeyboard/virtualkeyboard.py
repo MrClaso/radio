@@ -1,6 +1,6 @@
-from PyQt6.QtWidgets import QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QDialog
-from PyQt6.QtCore import QSize
-from PyQt6.QtGui import QIcon, QFont
+from PyQt5.QtWidgets import QWidget, QLabel, QPushButton, QHBoxLayout, QVBoxLayout, QDialog
+from PyQt5.QtCore import QSize
+from PyQt5.QtGui import QIcon, QFont
 
 class Kbd(QDialog):
 

@@ -1,10 +1,11 @@
 from virtualkeyboard import virtualkeyboard as vkb
 #from import virtualkeyboard as vkb
-import macwifi
+#import macwifi
 
-from PyQt6.QtWidgets import QLabel, QMainWindow, QListWidget, QVBoxLayout, QWidget, QPushButton
-from PyQt6 import QtWidgets
+from PyQt5.QtWidgets import QLabel, QMainWindow, QListWidget, QVBoxLayout, QWidget, QPushButton
+from PyQt5 import QtWidgets
 import sys
+import subprocess
 
 class SSIDWindow(QWidget):
 
@@ -13,11 +14,11 @@ class SSIDWindow(QWidget):
         self.initUI()
 
     def initUI(self):
-
-        lines = macwifi.list().splitlines()
-        self.ssidList = []
-        for a in lines:
-            self.ssidList.append(a.strip().split(" ")[0])
+        devices = subprocess.check_output(['netsh','wlan','show','network'])
+#        lines = macwifi.list().splitlines()
+#        self.ssidList = []
+#        for a in lines:
+#            self.ssidList.append(a.strip().split(" ")[0])
 
         self.mainWidget = QWidget(self)
         self.lo = QVBoxLayout()
